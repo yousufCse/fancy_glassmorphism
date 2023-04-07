@@ -1,40 +1,45 @@
 library fancy_glassmorphism;
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
-class FancyGalssMorphism extends StatelessWidget {
-  final Function() onTap;
-  final String text;
-  final Color? backgroundColor;
-  final Color? textColor;
-  final double? fontSize;
+class FancyGlassMorphism extends StatelessWidget {
+  final Widget child;
+  final double start;
+  final double end;
 
-  const FancyGalssMorphism({
-    super.key,
-    required this.onTap,
-    required this.text,
-    this.backgroundColor,
-    this.fontSize,
-    this.textColor,
-  });
+  const FancyGlassMorphism({
+    Key? key,
+    required this.child,
+    required this.start,
+    required this.end,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.only(left: 15, top: 7, bottom: 7, right: 15),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10), color: backgroundColor),
-        child: Text(
-          text,
-          style: titleStyle.copyWith(fontSize: fontSize, color: textColor),
+    return ClipRRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.white.withOpacity(start),
+                Colors.white.withOpacity(end),
+              ],
+              begin: AlignmentDirectional.topStart,
+              end: AlignmentDirectional.bottomEnd,
+            ),
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            border: Border.all(
+              width: 1.5,
+              color: Colors.white.withOpacity(0.2),
+            ),
+          ),
+          child: child,
         ),
       ),
     );
   }
-
-  final titleStyle = const TextStyle(
-    fontWeight: FontWeight.w500,
-  );
 }
